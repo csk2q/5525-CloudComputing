@@ -26,7 +26,13 @@ MODEL_PATH = "models/Qwen3-0.6B-Q4_K_M.gguf"  # Replace with your actual path
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model not found at path: {MODEL_PATH}")
 
-llm = Llama(model_path=MODEL_PATH, n_ctx=40960, n_threads=4, verbose=False)
+llm = Llama(
+    model_path=MODEL_PATH,     
+    n_ctx=512,      # lower context
+    n_batch=32,     # smaller batches
+    n_threads=2,    # match vCPUs
+    use_mlock=False, # avoid locking memory
+    verbose=False)
 
 def singleChatCompletion(prompt: str, maxTokens = 128):
     try:
