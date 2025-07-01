@@ -4,6 +4,12 @@ provider "google" {
   zone    = var.zone
 }
 
+# Enable Logging API
+resource "google_project_service" "logging" {
+  project = var.project_id
+  service = "logging.googleapis.com"
+}
+
 # VPC Network
 
 resource "google_compute_network" "llm_vpc_net" {
@@ -82,6 +88,12 @@ resource "google_compute_instance" "llm_vm" {
     network    = google_compute_network.llm_vpc_net.id
     subnetwork = google_compute_subnetwork.llm_subnet.id
     access_config {} # Enables external IP
+  }
+
+  service_account {
+    # Use default service account, or replace with a custom one if you prefer
+    email  = "default"
+    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
   # metadata = {
