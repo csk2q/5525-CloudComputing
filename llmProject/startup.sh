@@ -51,6 +51,23 @@ sudo apt-get update
 send_discord_message "Installing Docker packages..."
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Configure cloud logging for docker
+sudo mkdir -p /etc/google-cloud-ops-agent
+sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << 'EOF'
+logging:
+  receivers:
+    docker_logs:
+      type: files
+      include_paths:
+        - /var/lib/docker/containers/*/*.log
+  service:
+    pipelines:
+      docker_pipeline:
+        receivers: [docker_logs]
+EOF
+sudo systemctl restart google-cloud-ops-agent
+
+
 # Enable and start Docker service
 send_discord_message "Enabling and starting Docker service..."
 systemctl enable docker
