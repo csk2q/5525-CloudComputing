@@ -1,1 +1,4 @@
 https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/tree/main
+https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf
+
+Download with: curl -L -o Qwen3-0.6B-Q4_K_M.ggufs https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf
