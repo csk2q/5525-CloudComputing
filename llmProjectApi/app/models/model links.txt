@@ -1,0 +1,1 @@
+https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/tree/main

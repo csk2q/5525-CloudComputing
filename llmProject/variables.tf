@@ -31,3 +31,18 @@ variable "ssh_public_key_path" {
   type        = string
 }
 
+variable "repo_name" {
+  description = "Artifact Registry repository name"
+  type        = string
+}
+
+variable "image_name" {
+  description = "Docker image name"
+  type        = string
+}
+
+variable "discord_webhook" {
+  description = "The discord webhook to send logging to"
+  type = string
+  default = ""
+}

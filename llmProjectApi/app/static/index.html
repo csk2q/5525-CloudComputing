@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini LLM API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        form {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            box-sizing: border-box;
+            width: 100%;
+            /* height: 40px; */
+            min-height: 60px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mini LLM API</h1>
+
+    <form id="predict-form">
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result-predict"></div>
+
+    <h2>Ask the LLM a Question</h2>
+
+    <form id="ask-form">
+        <label for="prompt-ask">Prompt:</label>
+        <input type="text" id="prompt-ask" name="prompt-ask" required><br><br>
+
+        <button type="submit">Ask</button>
+    </form>
+
+    <div id="result-ask"></div>
+
+    <script>
+        const predictForm = document.getElementById('predict-form');
+        const resultPredictDiv = document.getElementById('result-predict');
+
+        predictForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const prompt = document.getElementById('prompt').value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultPredictDiv.innerHTML = data;
+            })
+            .catch(error => {
+                console.error(error);
+                const errorDiv = document.createElement('div');
+                errorDiv.innerText = `Error: ${error}`;
+                resultPredictDiv.appendChild(errorDiv);
+            });
+        });
+
+        const askForm = document.getElementById('ask-form');
+        const resultAskDiv = document.getElementById('result-ask');
+
+        askForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const prompt = document.getElementById('prompt-ask').value;
+
+            fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultAskDiv.innerHTML = data;
+            })
+            .catch(error => {
+                console.error(error);
+                const errorDiv = document.createElement('div');
+                errorDiv.innerText = `Error: ${error}`;
+                resultAskDiv.appendChild(errorDiv);
+            });
+        });
+    </script>
+</body>
+</html>
