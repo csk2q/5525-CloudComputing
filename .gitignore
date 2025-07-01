@@ -376,3 +376,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/python,terraform,jetbrains+all,visualstudiocode,macos,windows
+llmProjectApi/app/models/Qwen3-0.6B-Q4_K_M.gguf
