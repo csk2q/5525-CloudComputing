@@ -20,7 +20,15 @@ log2webhook() {
 }
 
 # Log the start of the script
-send_discord_message "# Startup script begain at $(date)"
+log2webhook "# Startup script begain at $(date)"
+
+# Check if the distribution is suported (eg: ubuntu/debian)
+log2webhook "OS: $(grep '^PRETTY_NAME=' /etc/os-release | cut -d '=' -f 2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
+distro_name=$(grep '^NAME=' /etc/os-release | cut -d '=' -f 2 | tr -d '"' | tr '[:upper:]' '[:lower:]')
+supported_distros=("ubuntu" "debian")
+if [[ ! " ${supported_distros[@]} " =~ " ${distro_name} " ]]; then
+    log2webhook "Detected distro $distro_name but this script only supports: $supported_list. Exiting."
+fi
 
 # Install Ops Agent
 log2webhook "Installing Ops Agent..."
@@ -36,12 +44,12 @@ sudo apt-get install -y apt-transport-https gnupg
 
 log2webhook "Installing Docker dependencies..."
 sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo curl -fsSL https://download.docker.com/linux/$distro_name/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 log2webhook "Adding Docker repository..."
 echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/$distro_name \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
