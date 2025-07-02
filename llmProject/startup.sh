@@ -78,6 +78,7 @@ send_discord_message "Adding DEFAULT_USER to docker group..."
 DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1)
 send_discord_message "Adding $DEFAULT_USER to docker group..."
 sudo usermod -aG docker "$DEFAULT_USER"
+newgrp docker
 
 # Authenticate Docker with Artifact Registry
 send_discord_message "Authenticating Docker with Artifact Registry..."
