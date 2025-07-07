@@ -31,6 +31,7 @@ supported=false
 for distro in "$${supported_distros[@]}"; do
     if [[ "$distro_name" == *"$distro"* ]]; then
         supported=true
+        distro_name=$distro # Set distro name for docker url later
         break
     fi
 done
