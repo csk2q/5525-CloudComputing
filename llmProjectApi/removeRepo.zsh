@@ -19,8 +19,8 @@ if ! gcloud artifacts docker images list "$REPO_PATH" \
   exit 1
 fi
 
-echo
-read "confirmation?Do you want to permanently delete the entire repository '$REPO_NAME' in region '$REGION'? Type 'yes' to confirm: "
+echo "Do you want to permanently delete the entire repository '$REPO_NAME' in region '$REGION'? Type 'yes' to confirm: "
+read confirmation
 if [[ "$confirmation" != "yes" ]]; then
   echo "Aborted."
   exit 0
