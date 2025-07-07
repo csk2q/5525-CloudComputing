@@ -26,7 +26,7 @@ log2webhook "# Startup script begain at $(date)"
 log2webhook "OS: $(grep '^PRETTY_NAME=' /etc/os-release | cut -d '=' -f 2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
 distro_name=$(grep '^NAME=' /etc/os-release | cut -d '=' -f 2 | tr -d '"' | tr '[:upper:]' '[:lower:]')
 supported_distros=("ubuntu" "debian")
-if [[ ! " ${supported_distros[@]} " =~ " ${distro_name} " ]]; then
+if [[ ! " $${supported_distros[@]} " =~ " $${distro_name} " ]]; then
     log2webhook "Detected distro $distro_name but this script only supports: $supported_list. Exiting."
 fi
 
