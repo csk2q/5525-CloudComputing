@@ -29,4 +29,10 @@ output "llm_vm_internal_dns" {
   value       = google_compute_instance.llm_vm.instance_id != "" ? "${google_compute_instance.llm_vm.name}.c.${var.project_id}.internal" : null
 }
 
+output "startup_script" {
+  description = "The startup script used for the VM"
+  sensitive = true
+  value = data.template_file.startup_script
+}
+
 
