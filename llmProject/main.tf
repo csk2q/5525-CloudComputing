@@ -19,22 +19,97 @@ resource "google_service_account" "llm_vm_sa" {
 
 # Grant roles to custom service account
 
+# locals {
+#   ops_agent_roles = [
+#     "roles/artifactregistry.reader",
+#     "roles/logging.logWriter",
+#     "roles/monitoring.metricWriter",
+#     "roles/stackdriver.resourceMetadata.writer",
+#   ]
+# }
+
+# resource "google_project_iam_member" "ops_agent_roles" {
+#   for_each = toset(local.ops_agent_roles)
+#   project = var.project_id
+#   role    = each.key
+#   member  = "serviceAccount:${google_service_account.llm_vm_sa.email}"
+# }
+
+resource "google_project_iam_member" "vm_sa_custom_role_binding" {
+  project = var.project_id
+  role    = google_project_iam_custom_role.custom_llm_vm_role.name
+  member  = "serviceAccount:${google_service_account.llm_vm_sa.email}"
+}
+
+resource "google_project_iam_custom_role" "custom_llm_vm_role" {
+  role_id     = "customLlmVmRole"
+  title       = "Custom LLM VM Role"
+  description = "Custom role with permissions for pulling from the artifact registry and writing to monitoring and logging"
+  project     = var.project_id
+
+  permissions = local.custom_role_permissions
+  stage       = "GA"
+}
+
 locals {
-  ops_agent_roles = [
-    "roles/artifactregistry.reader",
-    "roles/logging.logWriter",
-    "roles/monitoring.metricWriter",
-    "roles/stackdriver.resourceMetadata.writer",
+
+  # Permissions consolidated from the following roles using 'gcloud iam roles describe <role>'
+  # roles/artifactregistry.reader 
+  # roles/logging.logWriter 
+  # roles/monitoring.metricWriter 
+  # roles/stackdriver.resourceMetadata.writer 
+
+  custom_role_permissions = [
+    # roles/artifactregistry.reader
+    "artifactregistry.attachments.get",
+    "artifactregistry.attachments.list",
+    "artifactregistry.dockerimages.get",
+    "artifactregistry.dockerimages.list",
+    "artifactregistry.files.download",
+    "artifactregistry.files.get",
+    "artifactregistry.files.list",
+    "artifactregistry.locations.get",
+    "artifactregistry.locations.list",
+    "artifactregistry.mavenartifacts.get",
+    "artifactregistry.mavenartifacts.list",
+    "artifactregistry.npmpackages.get",
+    "artifactregistry.npmpackages.list",
+    "artifactregistry.packages.get",
+    "artifactregistry.packages.list",
+    "artifactregistry.projectsettings.get",
+    "artifactregistry.pythonpackages.get",
+    "artifactregistry.pythonpackages.list",
+    "artifactregistry.repositories.downloadArtifacts",
+    "artifactregistry.repositories.get",
+    "artifactregistry.repositories.list",
+    "artifactregistry.repositories.listEffectiveTags",
+    "artifactregistry.repositories.listTagBindings",
+    "artifactregistry.repositories.readViaVirtualRepository",
+    "artifactregistry.rules.get",
+    "artifactregistry.rules.list",
+    "artifactregistry.tags.get",
+    "artifactregistry.tags.list",
+    "artifactregistry.versions.get",
+    "artifactregistry.versions.list",
+    "resourcemanager.projects.get",
+
+    # roles/logging.logWriter
+    "logging.logEntries.create",
+    "logging.logEntries.route",
+
+    # roles/monitoring.metricWriter
+    "monitoring.metricDescriptors.create",
+    "monitoring.metricDescriptors.get",
+    "monitoring.metricDescriptors.list",
+    "monitoring.monitoredResourceDescriptors.get",
+    "monitoring.monitoredResourceDescriptors.list",
+    "monitoring.timeSeries.create",
+
+    # roles/stackdriver.resourceMetadata.writer
+    "stackdriver.resourceMetadata.write",
   ]
 }
 
-resource "google_project_iam_member" "ops_agent_roles" {
-  for_each = toset(local.ops_agent_roles)
-
-  project = var.project_id
-  role    = each.key
-  member  = "serviceAccount:${google_service_account.llm_vm_sa.email}"
-}
 
 
 # VPC Network
