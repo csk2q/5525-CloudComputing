@@ -15,10 +15,10 @@ variable "zone" {
   default     = "us-central1-c"
 }
 
-variable "ssh_source_range" {
-  description = "IP range allowed to SSH (e.g., your IP or 0.0.0.0/0)"
-  type        = string
-  default     = "0.0.0.0/0"
+variable "ssh_source_ranges" {
+  description = "A list of IP address or ranges allowed to SSH. Default: [\"0.0.0.0/0\"]"
+  type        = [string]
+  default     = ["0.0.0.0/0"]
 }
 
 variable "ssh_username" {

@@ -64,7 +64,7 @@ resource "google_compute_firewall" "allow_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = [var.ssh_source_range]
+  source_ranges = var.ssh_source_ranges
 }
 
 resource "google_compute_firewall" "allow_http_https" {
