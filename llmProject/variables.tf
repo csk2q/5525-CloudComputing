@@ -17,7 +17,7 @@ variable "zone" {
 
 variable "ssh_source_ranges" {
   description = "A list of IP address or ranges allowed to SSH. Default: [\"0.0.0.0/0\"]"
-  type        = [string]
+  type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
