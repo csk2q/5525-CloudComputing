@@ -7,7 +7,7 @@
         {
             "name": "Python Debugger: FastAPI",
             "type": "debugpy",
-            "cwd": "${workspaceFolder}/llmProjectApi",
+            "cwd": "${workspaceFolder}/llmProjectApi/app",
             "request": "launch",
             "module": "uvicorn",
             "args": [
