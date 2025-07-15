@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from llama_cpp import Llama
 from pydantic import BaseModel
+from brewHelper import BrewHelper, RubyParser
 
 # Initialize FastAPI app
 app = FastAPI(title="Mini LLM API")
@@ -28,7 +29,8 @@ if not os.path.exists(MODEL_PATH):
 
 llm = Llama(
     model_path=MODEL_PATH,     
-    n_ctx=512,      # lower context
+    # n_ctx=512,      # lower context
+    n_ctx=3072,
     n_batch=32,     # smaller batches
     n_threads=2,    # match vCPUs
     use_mlock=False, # avoid locking memory
@@ -91,7 +93,30 @@ def ask_llm(req: PromptRequest):
         return singleChatReply(req.prompt, req.max_tokens)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
 
+# Set up the git repos
+brew = BrewHelper()
+brew.updateCoreRepo(brew.rootDir)
+
+@app.get("/newFormula")
+def get_newFormula():
+    date = "1 week"
+    newFormulaInfo = []
+    for newFormulaPath in brew.getNewFormula(date):
+        fullPath = brew.formulaDir + '/' + newFormulaPath
+        print(fullPath)
+        newFormulaInfo.append(str(RubyParser(fullPath)))
+    
+    prompt = f"Summarize the following list of newly added applications called Formula that have been added this past {date} into a brief overview. Include a summary paragraph written like a radio commentator.\n" + '\n'.join(newFormulaInfo)
+    tokens = llm.tokenize(prompt.encode("utf-8"))
+    print(f'Token count: {len(tokens)}')
+    # try:
+    response = singleChatCompletion(prompt, 1024)
+    print(response)
+    return prompt + '\n----\n' + response
+    # except Exception as e:
+        # raise HTTPException(status_code=500, detail=str(e))
 
 
 
