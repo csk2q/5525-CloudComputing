@@ -100,7 +100,7 @@ class RubyParser:
         pass
     
     def __str__(self):
-        return f"""{self.name}: {self.description}\n- ({self.license}) {self.homepage} {self.gitRepository}"""
+        return f"""{self.name}: {self.description}\n- License: {self.license} Link(s): {self.homepage} {self.gitRepository}"""
         
         
 
