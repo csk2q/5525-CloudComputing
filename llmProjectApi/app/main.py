@@ -1,3 +1,4 @@
+import codecs
 import os
 from typing import Union
 
@@ -113,8 +114,12 @@ def get_newFormula():
     print(f'Token count: {len(tokens)}')
     # try:
     response = singleChatCompletion(prompt, 1024)
-    print(response)
-    return prompt + '\n----\n' + response
+    # print(response)
+    output = prompt + f'\n----\n' + response
+    returnValue = codecs.decode(output, 'unicode_escape')
+    # print(returnValue)
+    return returnValue
+    
     # except Exception as e:
         # raise HTTPException(status_code=500, detail=str(e))
 
