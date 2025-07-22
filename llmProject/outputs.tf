@@ -31,7 +31,7 @@ output "llm_vm_internal_dns" {
 
 output "startup_script" {
   description = "The startup script used for the VM"
-  sensitive = true
+  sensitive = true # marked sensitive to prevent cluttering command output
   value = data.template_file.startup_script.rendered
 }
 
